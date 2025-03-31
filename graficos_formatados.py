@@ -295,6 +295,7 @@ def plot_metric_fgc(value,titulo):
                'increasing': {'color': "red"},  # Se o valor subir, fica vermelho
                'decreasing': {'color': "green"}  # Se o valor cair, fica verde
                },
+        number = {'suffix':'%','valueformat':'.2f'},
         gauge={'axis': {'range': [None, 5], 'tickwidth': 1,'tickcolor':'black'},
                'bar': {'color': bar_color},
                'steps': [
@@ -330,6 +331,7 @@ def plot_metric_percentual(value,titulo):
                'increasing': {'color': "red"},  # Se o valor subir, fica vermelho
                'decreasing': {'color': "green"}  # Se o valor cair, fica verde
                },
+        number={'suffix': '%', 'valueformat': '.2f'},
         gauge={'axis': {'range': [None, 100], 'tickwidth': 1,'tickcolor':'black'},
                'bar': {'color': bar_color},
                'steps': [
@@ -376,6 +378,7 @@ def plot_metric_percentual_cat(value,titulo,categoria):
                'increasing': {'color': "red"},  # Se o valor subir, fica vermelho
                'decreasing': {'color': "green"}  # Se o valor cair, fica verde
                },
+        number={'suffix': '%', 'valueformat': '.2f'},
         gauge={'axis': {'range': [None, 100], 'tickwidth': 1,'tickcolor':'black'},
                'bar': {'color': bar_color},
                'steps': [],
