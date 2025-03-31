@@ -130,9 +130,6 @@ if upload_dataset is not None:
             plot_metric_percentual_cat(0, f'Renda Fixa - Pré-Fixado','Renda Fixa - Pré-Fixado'),
             use_container_width=True)
 
-
-
-    st.dataframe(df_if_class)
     #df_bancarios_posicoes_emissor_classficacao
 
 
@@ -181,7 +178,7 @@ if upload_dataset is not None:
 
     #st.dataframe(df_colagem)
     #st.dataframe(df_contratos)
-    st.dataframe(df_posicoes)
+    #st.dataframe(df_posicoes)
 
     st.plotly_chart(g_barra_01)
 
