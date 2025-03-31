@@ -182,19 +182,6 @@ if upload_dataset is not None:
 
     st.plotly_chart(g_barra_01)
 
-    st.markdown('### Porcentagem dos principais emissores')
-
-    # Criar colunas dinamicamente
-    list_ifs_50 = [item.split('- ',1)[1][0:20] for item in list(df_bancarios_50.index)]
-    colunas = st.columns(len(list_ifs_50))  # Número de colunas = número de itens
-    # Loop para preencher cada coluna com um gráfico
-    for i, item in enumerate(list_ifs_50):
-        with colunas[i]:  # Acessa a coluna correspondente
-            fig = desenha_pie_formatado(df_bancarios_50.iloc[i][['Percentual', 'Diferença']], list_ifs_50[i], '', '',
-                                        df_bancarios_50.iloc[i][['Percentual', 'Diferença']],
-                                        df_bancarios_50.iloc[i][['Percentual', 'Diferença']])
-
-            st.plotly_chart(fig, use_container_width=True)  # Exibe o gráfico
 
 
 
