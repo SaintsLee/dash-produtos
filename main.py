@@ -203,69 +203,72 @@ with tab1:
         st.warning("Por favor, anexe um arquivo para visualizar os dados.",icon='🚨')
 # Diligência
 with tab2:
-    # Diligência de produtos
-    st.markdown(
-        f'<h1 style="color: black;font-size:25px;" >Faixas de diligências dos produtos dos clientes</h1>',
-        unsafe_allow_html=True)
+    if upload_dataset is not None:
+        # Diligência de produtos
+        st.markdown(
+            f'<h1 style="color: black;font-size:25px;" >Faixas de diligências dos produtos dos clientes</h1>',
+            unsafe_allow_html=True)
 
-    df_base_diligencia = df_contratos.copy()
-    df_base_diligencia['Diligência'] = df_contratos['Diligência'].apply(lambda x: float(x.replace('%','')))
+        df_base_diligencia = df_contratos.copy()
+        df_base_diligencia['Diligência'] = df_contratos['Diligência'].apply(lambda x: float(x.replace('%','')))
 
-    acima_85 = df_base_diligencia[['Diligência', 'PL Total']][
-        df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] > 85.0].reset_index(drop=True)
-    acima_50 = df_base_diligencia[['Diligência', 'PL Total']][
-        (df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] > 50.0) & (
-                    df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] <= 85.0)].reset_index(drop=True)
-    acima_25 = df_base_diligencia[['Diligência', 'PL Total']][
-        (df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] > 25.0) & (
-                    df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] <= 50.0)].reset_index(drop=True)
-    abaixo_25 = df_base_diligencia[['Diligência', 'PL Total']][
-        (df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] <= 25.0) & (
-                    df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] <= 50.0)].reset_index(drop=True)
+        acima_85 = df_base_diligencia[['Diligência', 'PL Total']][
+            df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] > 85.0].reset_index(drop=True)
+        acima_50 = df_base_diligencia[['Diligência', 'PL Total']][
+            (df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] > 50.0) & (
+                        df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] <= 85.0)].reset_index(drop=True)
+        acima_25 = df_base_diligencia[['Diligência', 'PL Total']][
+            (df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] > 25.0) & (
+                        df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] <= 50.0)].reset_index(drop=True)
+        abaixo_25 = df_base_diligencia[['Diligência', 'PL Total']][
+            (df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] <= 25.0) & (
+                        df_base_diligencia[['Diligência', 'PL Total']]['Diligência'] <= 50.0)].reset_index(drop=True)
 
-    col_metrics_1_diligengia_1, col_metrics_1_diligengia_2, col_metrics_1_diligengia_3, col_metrics_1_diligengia_4 = st.columns([1,1,1,1])
+        col_metrics_1_diligengia_1, col_metrics_1_diligengia_2, col_metrics_1_diligengia_3, col_metrics_1_diligengia_4 = st.columns([1,1,1,1])
 
-    col_metrics_1_diligengia_1.plotly_chart(
-        plot_metric_percentual_dili(acima_85['PL Total'].sum()/TOTAL_PORTFEL*100, f'Diligência acima de 85%','acima 85'),
-        use_container_width=True)
+        col_metrics_1_diligengia_1.plotly_chart(
+            plot_metric_percentual_dili(acima_85['PL Total'].sum()/TOTAL_PORTFEL*100, f'Diligência acima de 85%','acima 85'),
+            use_container_width=True)
 
-    col_metrics_1_diligengia_2.plotly_chart(
-        plot_metric_percentual_dili(acima_50['PL Total'].sum()/TOTAL_PORTFEL*100, f'Diligência entre 50% e 85%','entre 50 e 85'),
-        use_container_width=True)
+        col_metrics_1_diligengia_2.plotly_chart(
+            plot_metric_percentual_dili(acima_50['PL Total'].sum()/TOTAL_PORTFEL*100, f'Diligência entre 50% e 85%','entre 50 e 85'),
+            use_container_width=True)
 
-    col_metrics_1_diligengia_3.plotly_chart(
-        plot_metric_percentual_dili(acima_25['PL Total'].sum()/TOTAL_PORTFEL*100, f'Diligência entre 25% e 50%','entre 25 e 50'),
-        use_container_width=True)
+        col_metrics_1_diligengia_3.plotly_chart(
+            plot_metric_percentual_dili(acima_25['PL Total'].sum()/TOTAL_PORTFEL*100, f'Diligência entre 25% e 50%','entre 25 e 50'),
+            use_container_width=True)
 
-    col_metrics_1_diligengia_4.plotly_chart(
-        plot_metric_percentual_dili(abaixo_25['PL Total'].sum()/TOTAL_PORTFEL*100, f'Diligência abaixo de 25%','abaixo de 25'),
-        use_container_width=True)
+        col_metrics_1_diligengia_4.plotly_chart(
+            plot_metric_percentual_dili(abaixo_25['PL Total'].sum()/TOTAL_PORTFEL*100, f'Diligência abaixo de 25%','abaixo de 25'),
+            use_container_width=True)
 
-    # Status carteiras dos clientes
-    st.markdown(
-        f'<h1 style="color: black;font-size:25px;" >Status das carteiras dos clientes</h1>',
-        unsafe_allow_html=True)
-    df_status = df_contratos[['Status', 'PL Total']].groupby('Status').sum().reset_index().sort_values(by='PL Total',                                                                                  ascending=False).reset_index(
-        drop=True)
-    df_status['Percentual'] = df_status['PL Total'] / TOTAL_PORTFEL * 100
+        # Status carteiras dos clientes
+        st.markdown(
+            f'<h1 style="color: black;font-size:25px;" >Status das carteiras dos clientes</h1>',
+            unsafe_allow_html=True)
+        df_status = df_contratos[['Status', 'PL Total']].groupby('Status').sum().reset_index().sort_values(by='PL Total',                                                                                  ascending=False).reset_index(
+            drop=True)
+        df_status['Percentual'] = df_status['PL Total'] / TOTAL_PORTFEL * 100
 
-    st.plotly_chart(desenha_pie_formatado(df_status,
-                                          ' ',
-                                          '',
-                                          '',
-                                          'Status',
-                                          'Percentual'), use_container_width=True)
+        st.plotly_chart(desenha_pie_formatado(df_status,
+                                              ' ',
+                                              '',
+                                              '',
+                                              'Status',
+                                              'Percentual'), use_container_width=True)
 
-    df_posicoes_teste_classes = df_posicoes[['Classificação','Valor','Ativo']]
+        df_posicoes_teste_classes = df_posicoes[['Classificação','Valor','Ativo']]
 
-    st.dataframe(df_posicoes_teste_classes.groupby(['Classificação']).sum().reset_index())
+        st.dataframe(df_posicoes_teste_classes.groupby(['Classificação']).sum().reset_index())
 
-    st.plotly_chart(desenha_pie_formatado(df_posicoes_teste_classes.groupby(['Classificação']).sum().reset_index(),
-                                          ' ',
-                                          '',
-                                          '',
-                                          'Classificação',
-                                          'Valor'), use_container_width=True)
+        st.plotly_chart(desenha_pie_formatado(df_posicoes_teste_classes.groupby(['Classificação']).sum().reset_index(),
+                                              ' ',
+                                              '',
+                                              '',
+                                              'Classificação',
+                                              'Valor'), use_container_width=True)
+    else:
+        st.warning("Por favor, anexe um arquivo para visualizar os dados.", icon='🚨')
 
 
 
