@@ -226,7 +226,7 @@ def desenha_pie_formatado(dataset, title,titulo_y, titulo_x, valor_x,valor_y):
                  hole =.5,
                  color_discrete_sequence= cores_personalizadas)
 
-    fig.update_layout(xaxis_title=titulo_x, yaxis_title=titulo_y, showlegend=False, legend_title_text = 'Montante',height=350, plot_bgcolor=back_color,
+    fig.update_layout(xaxis_title=titulo_x, yaxis_title=titulo_y, showlegend=True, legend_title_text = 'Status',height=500, plot_bgcolor=back_color,
                       xaxis=dict(
                           tickfont=dict(size=13, color = text_color),  # Tamanho da fonte para os números no eixo X
                           showticklabels = True
@@ -237,8 +237,14 @@ def desenha_pie_formatado(dataset, title,titulo_y, titulo_x, valor_x,valor_y):
                       ),
                       xaxis_title_font=dict(size=18, color = text_color),  # Tamanho da fonte do eixo X
                       yaxis_title_font=dict(size=18, color = text_color),  # Tamanho da fonte do eixo Y
-                      title={'font': {'size': 13}}
+                      title={'font': {'size': 13}},
+                      legend=dict(
+                          font=dict(size=18)
                       )
+                      )
+    fig.update_traces(
+        textfont=dict(size=18)  # Ajuste o tamanho conforme necessário
+    )
 
     # Personalizar o grid
     fig.update_xaxes(
@@ -270,7 +276,7 @@ def desenha_pie_formatado(dataset, title,titulo_y, titulo_x, valor_x,valor_y):
     )
 
     # Desativando o hover
-    fig.update_traces(hoverinfo="none", hovertemplate=None)
+    #fig.update_traces(hoverinfo="none", hovertemplate=None)
     return fig
 
 def plot_metric_fgc(value,titulo):
@@ -386,4 +392,72 @@ def plot_metric_percentual_cat(value,titulo,categoria):
                }))
     fig.update_layout(font={'color': "black"},
                       margin=dict(t=0, b=0, l=30, r=30))
+    return fig
+
+def plot_metric_percentual_dili(value,titulo,categoria):
+    ponto_otimo = 15
+
+
+    if categoria == 'acima 85':
+        range_max = 100
+        if value > 60:
+            bar_color = 'ForestGreen'
+        elif value > 40:
+            bar_color = 'Gold'
+        elif value > 20:
+            bar_color = 'Orange'
+        else:
+            bar_color = 'Maroon'
+
+    if categoria == 'entre 50 e 85':
+        range_max = 50
+        if value > 40:
+            bar_color = 'Maroon'
+        elif value > 30:
+            bar_color = 'Orange'
+        elif value > 20:
+            bar_color = 'Gold'
+        else:
+            bar_color = 'ForestGreen'
+
+    if categoria == 'entre 25 e 50':
+        range_max = 30
+        if value > 20:
+            bar_color = 'Maroon'
+        elif value > 10:
+            bar_color = 'Orange'
+        elif value > 5:
+            bar_color = 'Gold'
+        else:
+            bar_color = 'ForestGreen'
+
+    if categoria == 'abaixo de 25':
+        range_max = 10
+        if value > 7.5:
+            bar_color = 'Maroon'
+        elif value > 5:
+            bar_color = 'Orange'
+        elif value > 2.5:
+            bar_color = 'Gold'
+        else:
+            bar_color = 'ForestGreen'
+
+    fig = go.Figure(go.Indicator(
+        domain={'x': [0, 1], 'y': [0, 1]},
+        value=value,
+        mode="gauge+number",
+        title={'text': titulo},
+        delta={'reference': ponto_otimo,
+               'increasing': {'color': "red"},  # Se o valor subir, fica vermelho
+               'decreasing': {'color': "green"}  # Se o valor cair, fica verde
+               },
+        number={'suffix': '%', 'valueformat': '.2f'},
+        gauge={'axis': {'range': [None, range_max], 'tickwidth': 1,'tickcolor':'black'},
+               'bar': {'color': bar_color},
+               'steps': [],
+               'threshold': {'line': {'color': "black", 'width': 4}, 'thickness': 0.75, 'value': value}
+               }))
+    fig.update_layout(font={'color': "black"},
+                      margin=dict(t=0, b=0, l=30, r=30))
+
     return fig
