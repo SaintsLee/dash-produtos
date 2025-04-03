@@ -1,3 +1,6 @@
+import pandas as pd
+import io
+
 def x9_consultores(banco,df_agregado_fgc,df_contrato):
     df_agregado_fgc_banco = df_agregado_fgc[df_agregado_fgc['Proteção FGC'] == banco].sort_values(by='Total (R$)',
                                                                                                   ascending=False).reset_index(
@@ -13,6 +16,13 @@ def x9_consultores(banco,df_agregado_fgc,df_contrato):
         banco = '145 - CONGLOMERADO THUG MASTER'
     return df_agregado_fgc_banco
     # df_agregado_fgc_banco.to_excel(f'C:/Users/guilh/Desktop/Produtos Estourados/{banco}.xlsx',index=False)
+
+def to_excel(df):
+    output = io.BytesIO()  # Criar buffer de memória
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, index=False, sheet_name='Dados')
+    processed_data = output.getvalue()
+    return processed_data
 
 LISTA_BANCOS_S3_S4 = [
     "4 - BANCO ABC BRASIL S.A.",

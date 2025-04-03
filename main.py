@@ -3,7 +3,7 @@ import pandas as pd
 from graficos_formatados import (desenha_barra_formatado,
                                  plot_metric_fgc, plot_metric_percentual, plot_metric_percentual_cat,
                                  plot_metric_percentual_dili, desenha_pie_formatado)
-from auxiliares import x9_consultores, LISTA_BANCOS_S3_S4
+from auxiliares import x9_consultores, LISTA_BANCOS_S3_S4, to_excel
 
 st.set_page_config(page_title='Dashboard - Visualização de produtos',
                    page_icon='📖',
@@ -115,6 +115,13 @@ if upload_dataset is not None:
                 f'<h1 style="color: black;font-size:25px;" >Clientes que possuem produtos da instituição: <span style="color: ForestGreen;">{lista_ifs_selecionadas.split('- ')[1]}</span></h1>',
                 unsafe_allow_html=True)
 
+            clientes_acima_fgc_download = to_excel(df_agregado_fgc_banco[df_agregado_fgc_banco['Total (R$)'] >= 250000.00])
+            st.download_button('Download clientes acima do FGC',
+                               data = clientes_acima_fgc_download,
+                               file_name=f'Clientes acima do FGC {quantidade_clientes_acima_fgc} - {lista_ifs_selecionadas.split('- ')[1]}.xlsx',
+                               mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                               icon=":material/download:")
+
             col_metrics_1, col_metrics_2, col_metrics_3, col_metrics_4 = st.columns([1,1,1,1])
             col_metrics_1.plotly_chart(plot_metric_fgc(percentual_acima_fgc,f'Clientes acima do FGC: {quantidade_clientes_acima_fgc}'),use_container_width=True)
             col_metrics_2.plotly_chart(plot_metric_percentual(quantidade_clientes_total_if/TOTAL_CLIENTES_PORTFEL*100,f'Clientes na instituição: {quantidade_clientes_total_if}'),use_container_width=True)
@@ -202,6 +209,29 @@ if upload_dataset is not None:
             st.plotly_chart(g_barra_01)
     # Diligência
     with tab2:
+        @st.cache_data
+        def posicoes_classes(df_posicoes):
+            df_posicoes_classes = df_posicoes[['Classificação', 'Valor', 'Ativo']]
+            st.plotly_chart(desenha_pie_formatado(df_posicoes_classes.groupby(['Classificação']).sum().reset_index(),
+                                                  ' ',
+                                                  '',
+                                                  '',
+                                                  'Classificação',
+                                                  'Valor'), use_container_width=True)
+            return df_posicoes_classes
+
+        # Busca sobre ativo
+        lista_ativos_na_portfel = list(df_posicoes['Ativo'].unique())
+        ativo_selecionados = st.multiselect('Caso desejar analisar um ativo em específico: ',lista_ativos_na_portfel,max_selections=1)
+        if len(ativo_selecionados) != 0:
+            df_ativo_selecionado = df_posicoes[df_posicoes['Ativo'] == ativo_selecionados[0]]
+            total_ativo_selecionado = df_ativo_selecionado['Valor'].sum()
+            total_ativo_selecionado_texto = f"{total_ativo_selecionado:_.2f}".replace('_',' ')
+            st.markdown(
+                f'<span style="color: black;font-size:16px;" >PL Portfel no ativo {ativo_selecionados[0]}: R$ {total_ativo_selecionado_texto} - {total_ativo_selecionado/TOTAL_PORTFEL*100:.2f} %</span>',
+                unsafe_allow_html=True)
+            st.dataframe(df_ativo_selecionado)
+
         # Diligência de produtos
         st.markdown(
             f'<h1 style="color: black;font-size:25px;" >Faixas de diligências dos produtos dos clientes</h1>',
@@ -255,16 +285,13 @@ if upload_dataset is not None:
                                               'Status',
                                               'Percentual'), use_container_width=True)
 
-        df_posicoes_teste_classes = df_posicoes[['Classificação','Valor','Ativo']]
+        # Posiçoes por categoria
+        st.markdown(
+            f'<h1 style="color: black;font-size:25px;" >Composição carteira portfel</h1>',
+            unsafe_allow_html=True)
 
-        st.dataframe(df_posicoes_teste_classes.groupby(['Classificação']).sum().reset_index())
+        df_posicoes_classes = posicoes_classes(df_posicoes)
 
-        st.plotly_chart(desenha_pie_formatado(df_posicoes_teste_classes.groupby(['Classificação']).sum().reset_index(),
-                                              ' ',
-                                              '',
-                                              '',
-                                              'Classificação',
-                                              'Valor'), use_container_width=True)
 else:
     st.warning("Por favor, anexe um arquivo para visualizar os dados.",icon='🚨')
 
