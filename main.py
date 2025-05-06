@@ -112,13 +112,14 @@ if upload_dataset is not None:
                ascending=False)
 
             st.markdown(
-                f'<h1 style="color: black;font-size:25px;" >Clientes que possuem produtos da instituição: <span style="color: ForestGreen;">{lista_ifs_selecionadas.split('- ')[1]}</span></h1>',
-                unsafe_allow_html=True)
+                f'Clientes que possuem produtos da instituição: {lista_ifs_selecionadas.split("- ")[1]}',
+                unsafe_allow_html=True
+            )
 
             clientes_acima_fgc_download = to_excel(df_agregado_fgc_banco[df_agregado_fgc_banco['Total (R$)'] >= 250000.00])
             st.download_button('Download clientes acima do FGC',
                                data = clientes_acima_fgc_download,
-                               file_name=f'Clientes acima do FGC {quantidade_clientes_acima_fgc} - {lista_ifs_selecionadas.split('- ')[1]}.xlsx',
+                               file_name=f'Clientes acima do FGC {quantidade_clientes_acima_fgc} - {lista_ifs_selecionadas.split("- ")[1]}.xlsx',
                                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                                icon=":material/download:")
 
@@ -129,8 +130,10 @@ if upload_dataset is not None:
             col_metrics_4.plotly_chart(plot_metric_fgc(float(df_bancarios_filtrados/TOTAL_PORTFEL*100),'% Montante/PL Portfel'),use_container_width=True)
 
             st.markdown(
-                f'<h1 style="color: black;font-size:25px;" >Posições por categoria da instituição: <span style="color: ForestGreen;">{lista_ifs_selecionadas.split('- ')[1]}</span></h1>',
-                unsafe_allow_html=True)
+                f'<h1 style="color: black; font-size:25px;">Clientes que possuem produtos da instituição: <span style="color: ForestGreen;">{lista_ifs_selecionadas}</span></h1>',
+                unsafe_allow_html=True
+            )
+
             col_metrics_class_1, col_metrics_class_2, col_metrics_class_3 = st.columns([1,1,1])
             df_if_class = df_bancarios_posicoes_emissor_classficacao[df_bancarios_posicoes_emissor_classficacao['Proteção FGC']==lista_ifs_selecionadas]
             TOTAL_POS_IF = float(df_if_class['Valor'].sum())

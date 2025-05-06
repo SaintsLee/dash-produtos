@@ -2,3 +2,10 @@
 **.venv
 **__pycache__
 consolidated-report.xlsx
+consolidated-report-março.xlsx
+consolidated-report 29-04.xlsx
+
+**output
+dist_app.txt
+run.py
+portfel_logo.ico
