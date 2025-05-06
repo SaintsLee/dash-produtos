@@ -112,7 +112,7 @@ if upload_dataset is not None:
                ascending=False)
 
             st.markdown(
-                f'Clientes que possuem produtos da instituição: {lista_ifs_selecionadas.split("- ")[1]}',
+                f'<h1 style="color: black; font-size:25px;">Clientes que possuem produtos da instituição: <span style="color: ForestGreen;">{lista_ifs_selecionadas.split("- ")[1]}</span></h1>',
                 unsafe_allow_html=True
             )
 
@@ -130,7 +130,7 @@ if upload_dataset is not None:
             col_metrics_4.plotly_chart(plot_metric_fgc(float(df_bancarios_filtrados/TOTAL_PORTFEL*100),'% Montante/PL Portfel'),use_container_width=True)
 
             st.markdown(
-                f'<h1 style="color: black; font-size:25px;">Clientes que possuem produtos da instituição: <span style="color: ForestGreen;">{lista_ifs_selecionadas}</span></h1>',
+                f'<h1 style="color: black; font-size:25px;">Clientes que possuem produtos da instituição: <span style="color: ForestGreen;">{lista_ifs_selecionadas.split("- ")[1]}</span></h1>',
                 unsafe_allow_html=True
             )
 
